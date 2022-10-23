@@ -124,7 +124,7 @@ const HomePage: NextPage = () => {
       </Head>
       <Main>
         <Title>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welaaae to <a href="https://nextjs.org">Next.js!</a>
         </Title>
 
         <Description>
