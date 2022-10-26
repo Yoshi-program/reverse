@@ -12,8 +12,8 @@ const MainArea = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 488px;
-  height: 488px;
+  width: 498px;
+  height: 498px;
   margin: 0;
   margin-right: -50%;
   background: yellow;
@@ -42,27 +42,40 @@ const Black = styled(Block)`
 `
 
 const HomePage: NextPage = () => {
-  const [board, setBoard] = useState(Array.from(new Array(8), () => new Array(8).fill(9)))
+  // const [board, setBoard] = useState(
+  //   Array.from(new Array(8), () => new Array(8).fill(9))
+  // )
+  // const board = Array.from(new Array(8), () => new Array(8).fill(9))
   const [whiteNum, setWhiteNum] = useState(0)
   const [balckNum, setBlackNum] = useState(0)
   // おける場所を調べる関数
   const search = () => {
     // おける座標を返す
   }
-  const newBoard: number[][] = JSON.parse(JSON.stringify(board))
-  useEffect(() => {
-    // 初期設定
-    newBoard[4][4] = 1
-    newBoard[4][5] = 2
-    newBoard[5][4] = 2
-    newBoard[5][5] = 1
-  }, [])
+  const createNewBoard = (): number[][] => {
+    const board = Array.from(new Array(8), () => new Array(8).fill(9))
+    board[3][3] = 1
+    board[3][4] = 2
+    board[4][3] = 2
+    board[4][4] = 1
+    return board
+  }
+  const board = createNewBoard()
+  // useEffect(() => {
+
+  // }, [])
   return (
     <Container>
       <MainArea>
-      {board.map((row, y) =>
+        {board.map((row, y) =>
           row.map((num, x) =>
-            num === 9 ? <Block key={`${x}-${y}`} /> : <Block key={`${x}-${y}`} /> 
+            num === 9 ? (
+              <Block key={`${x}-${y}`} />
+            ) : num === 1 ? (
+              <White key={`${x}-${y}`} />
+            ) : (
+              <Black key={`${x}-${y}`} />
+            )
           )
         )}
       </MainArea>
