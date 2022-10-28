@@ -12,12 +12,22 @@ const MainArea = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 498px;
-  height: 498px;
+  width: 600px;
+  height: 640px;
   margin: 0;
   margin-right: -50%;
   background: yellow;
   background-color: #e3e3e3;
+  border: solid 5px;
+  border-color: #fff #3e3e3e #3e3e3e #fff;
+  transform: translate(-50%, -50%);
+`
+const Board = styled.div`
+  position: fixed;
+  top: 57%;
+  left: 50%;
+  width: 498px;
+  height: 498px;
   border: solid 5px;
   border-color: #fff #3e3e3e #3e3e3e #fff;
   transform: translate(-50%, -50%);
@@ -40,21 +50,21 @@ const WhiteBlock = styled(Block)`
 const BlackBlock = styled(Block)`
   background-color: #000000;
 `
-// const WhiteCountArea = styled(MainArea)`
-//   top: 10%;
-//   left: 30%;
-//   width: 200px;
-//   height: 70px;
-//   background-color: #e2ffc9;
-// `
-// const BlackCountArea = styled(WhiteCountArea)`
-//   left: 70%;
-// `
+const WhiteCountArea = styled(MainArea)`
+  top: 9%;
+  left: 30%;
+  width: 200px;
+  height: 70px;
+  background-color: #e2ffc9;
+`
+const BlackCountArea = styled(WhiteCountArea)`
+  left: 70%;
+`
 
 const HomePage: NextPage = () => {
   const [whiteTurn, setWhiteTurn] = useState(true)
   const [whiteNum, setWhiteNum] = useState(2)
-  const [balckNum, setBlackNum] = useState(2)
+  const [blackNum, setBlackNum] = useState(2)
   // おける場所を調べる関数
   const search = () => {
     // おける座標を返す
@@ -76,7 +86,7 @@ const HomePage: NextPage = () => {
         setWhiteNum(whiteNum + 1)
       } else {
         newBoard[y][x] = 2
-        setBlackNum(balckNum + 1)
+        setBlackNum(blackNum + 1)
       }
     }
     const newBoard: number[][] = JSON.parse(JSON.stringify(board))
@@ -86,20 +96,22 @@ const HomePage: NextPage = () => {
   }
   return (
     <Container>
-      {/* <WhiteCountArea></WhiteCountArea>
-      <BlackCountArea></BlackCountArea> */}
       <MainArea>
-        {board.map((row, y) =>
-          row.map((num, x) =>
-            num === 9 ? (
-              <Block key={`${x}-${y}`} onClick={() => onClick(x, y)} />
-            ) : num === 1 ? (
-              <WhiteBlock key={`${x}-${y}`} />
-            ) : (
-              <BlackBlock key={`${x}-${y}`} />
+        <WhiteCountArea>{whiteNum}</WhiteCountArea>
+        <BlackCountArea>{blackNum}</BlackCountArea>
+        <Board>
+          {board.map((row, y) =>
+            row.map((num, x) =>
+              num === 9 ? (
+                <Block key={`${x}-${y}`} onClick={() => onClick(x, y)} />
+              ) : num === 1 ? (
+                <WhiteBlock key={`${x}-${y}`} />
+              ) : (
+                <BlackBlock key={`${x}-${y}`} />
+              )
             )
-          )
-        )}
+          )}
+        </Board>
       </MainArea>
     </Container>
   )
