@@ -34,20 +34,27 @@ const Block = styled.button`
   border: solid 1px;
   border-color: '#707070';
 `
-const White = styled(Block)`
+const WhiteBlock = styled(Block)`
   background-color: #f9f9f9;
 `
-const Black = styled(Block)`
+const BlackBlock = styled(Block)`
   background-color: #000000;
 `
+// const WhiteCountArea = styled(MainArea)`
+//   top: 10%;
+//   left: 30%;
+//   width: 200px;
+//   height: 70px;
+//   background-color: #e2ffc9;
+// `
+// const BlackCountArea = styled(WhiteCountArea)`
+//   left: 70%;
+// `
 
 const HomePage: NextPage = () => {
-  // const [board, setBoard] = useState(
-  //   Array.from(new Array(8), () => new Array(8).fill(9))
-  // )
-  // const board = Array.from(new Array(8), () => new Array(8).fill(9))
-  const [whiteNum, setWhiteNum] = useState(0)
-  const [balckNum, setBlackNum] = useState(0)
+  const [whiteTurn, setWhiteTurn] = useState(true)
+  const [whiteNum, setWhiteNum] = useState(2)
+  const [balckNum, setBlackNum] = useState(2)
   // おける場所を調べる関数
   const search = () => {
     // おける座標を返す
@@ -60,21 +67,36 @@ const HomePage: NextPage = () => {
     board[4][4] = 1
     return board
   }
-  const board = createNewBoard()
-  // useEffect(() => {
+  const [board, setBoard] = useState(createNewBoard())
 
-  // }, [])
+  const onClick = (x: number, y: number) => {
+    const turnOver = () => {
+      if (whiteTurn) {
+        newBoard[y][x] = 1
+        setWhiteNum(whiteNum + 1)
+      } else {
+        newBoard[y][x] = 2
+        setBlackNum(balckNum + 1)
+      }
+    }
+    const newBoard: number[][] = JSON.parse(JSON.stringify(board))
+    turnOver()
+    setWhiteTurn(!whiteTurn)
+    setBoard(newBoard)
+  }
   return (
     <Container>
+      {/* <WhiteCountArea></WhiteCountArea>
+      <BlackCountArea></BlackCountArea> */}
       <MainArea>
         {board.map((row, y) =>
           row.map((num, x) =>
             num === 9 ? (
-              <Block key={`${x}-${y}`} />
+              <Block key={`${x}-${y}`} onClick={() => onClick(x, y)} />
             ) : num === 1 ? (
-              <White key={`${x}-${y}`} />
+              <WhiteBlock key={`${x}-${y}`} />
             ) : (
-              <Black key={`${x}-${y}`} />
+              <BlackBlock key={`${x}-${y}`} />
             )
           )
         )}
