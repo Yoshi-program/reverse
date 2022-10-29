@@ -65,32 +65,65 @@ const HomePage: NextPage = () => {
   const [whiteTurn, setWhiteTurn] = useState(true)
   const [whiteNum, setWhiteNum] = useState(2)
   const [blackNum, setBlackNum] = useState(2)
-  // おける場所を調べる関数
-  const search = () => {
-    // おける座標を返す
-  }
+
   const createNewBoard = (): number[][] => {
     const board = Array.from(new Array(8), () => new Array(8).fill(9))
     board[3][3] = 1
-    board[3][4] = 2
-    board[4][3] = 2
+    board[3][4] = -1
+    board[4][3] = -1
     board[4][4] = 1
     return board
   }
   const [board, setBoard] = useState(createNewBoard())
 
   const onClick = (x: number, y: number) => {
-    const turnOver = () => {
+    // ひっくり返す関数
+    const turnOver = (x: number, y: number) => {
       if (whiteTurn) {
         newBoard[y][x] = 1
         setWhiteNum(whiteNum + 1)
       } else {
-        newBoard[y][x] = 2
+        newBoard[y][x] = -1
         setBlackNum(blackNum + 1)
       }
     }
+    // 置ける場所を調べる関数
+    const searchCoordinate = (
+      x: number,
+      y: number
+    ): [boolean, { [key: string]: number }[]] => {
+      let list = []
+      const wb = whiteTurn ? 1 : -1
+      let ry, rx
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          ry = y + dy
+          rx = x + dx
+
+          // 調べるマスが「相手の石」ならループ
+          while (newBoard[ry][rx] == -wb) {
+            list.push({ x: rx, y: ry })
+            ry += dy
+            rx += dx
+
+            //自分の石に出会った時
+            if (newBoard[ry][rx] == wb) {
+              return [true, list]
+            }
+          }
+          list = []
+        }
+      }
+      return [false, []]
+    }
     const newBoard: number[][] = JSON.parse(JSON.stringify(board))
-    turnOver()
+    const [b, list] = searchCoordinate(x, y)
+    console.log('list: ', list)
+    if (!b) return
+    list.map((c) => {
+      turnOver(c.x, c.y)
+    })
+    turnOver(x, y)
     setWhiteTurn(!whiteTurn)
     setBoard(newBoard)
   }
