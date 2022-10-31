@@ -109,7 +109,9 @@ const HomePage: NextPage = () => {
           if (ry < 0 || 7 < ry || rx < 0 || 7 < rx) continue
 
           // 調べるマスが「相手の石」ならループ
-          while (newBoard[ry][rx] == -wb) {
+          let i = 0
+          while (newBoard[ry][rx] == -wb && i < 10) {
+            i++
             tmplist.push({ x: rx, y: ry })
             ry += dy
             rx += dx
@@ -119,6 +121,7 @@ const HomePage: NextPage = () => {
             if (newBoard[ry][rx] == wb) {
               list = [...list, ...tmplist]
               yes = true
+              break
               // return [true, tmplist]
             }
           }
@@ -128,17 +131,41 @@ const HomePage: NextPage = () => {
       return [yes, list]
     }
     const newBoard: number[][] = JSON.parse(JSON.stringify(board))
-    console.log(x, y)
-    const [b, list] = searchCoordinate(x, y)
-    // console.log('list: ', list)
-    if (!b) return
-    list.map((c) => {
-      turnOver(c.x, c.y)
-    })
-    turnOver(x, y)
-    setWhiteTurn(!whiteTurn)
-    setBoard(newBoard)
+    if (newBoard[y][x] === 9) {
+      // console.log(newBoard)
+      const [b, list] = searchCoordinate(x, y)
+      // console.log('list: ', list)
+      if (!b) return false
+      else {
+        list.map((c) => {
+          turnOver(c.x, c.y)
+        })
+        turnOver(x, y)
+        setBoard(newBoard)
+        setWhiteTurn(!whiteTurn)
+        return true
+      }
+    } else {
+      return false
+    }
   }
+  useEffect(() => {
+    if (!whiteTurn) {
+      for (let bx: number, by: number, i: number = 0; i < 100; i++) {
+        bx = Math.floor(Math.random() * 8)
+        by = Math.floor(Math.random() * 8)
+        if (onClick(bx, by)) return
+      }
+      for (let bx: number = 0; bx < 8; bx++) {
+        for (let by: number = 0; by < 8; by++) {
+          if (onClick(bx, by)) {
+            return
+          }
+        }
+      }
+      setWhiteTurn(!whiteTurn)
+    }
+  }, [whiteTurn])
   return (
     <Container>
       <MainArea>
