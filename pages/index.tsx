@@ -44,10 +44,18 @@ const Block = styled.button`
   border: solid 1px;
   border-color: '#707070';
 `
-const WhiteBlock = styled(Block)`
+const WhiteBlock = styled(Block)``
+const BlackBlock = styled(Block)``
+const WhiteDisc = styled(Block)`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   background-color: #f9f9f9;
 `
-const BlackBlock = styled(Block)`
+const BlackDisc = styled(Block)`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   background-color: #000000;
 `
 const WhiteCountArea = styled(MainArea)`
@@ -177,9 +185,13 @@ const HomePage: NextPage = () => {
               num === 9 ? (
                 <Block key={`${x}-${y}`} onClick={() => onClick(x, y)} />
               ) : num === 1 ? (
-                <WhiteBlock key={`${x}-${y}`} />
+                <WhiteBlock key={`${x}-${y}`}>
+                  <WhiteDisc />
+                </WhiteBlock>
               ) : (
-                <BlackBlock key={`${x}-${y}`} />
+                <BlackBlock key={`${x}-${y}`}>
+                  <BlackDisc></BlackDisc>
+                </BlackBlock>
               )
             )
           )}
