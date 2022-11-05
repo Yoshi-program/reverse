@@ -1,8 +1,6 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Box, chakra } from '@chakra-ui/react'
 
 const Container = styled.div`
   height: 100vh;
@@ -64,6 +62,8 @@ const WhiteCountArea = styled(MainArea)`
   width: 200px;
   height: 70px;
   background-color: #e2ffc9;
+  font-size: 40px;
+  text-align: center;
 `
 const BlackCountArea = styled(WhiteCountArea)`
   left: 70%;
@@ -74,6 +74,7 @@ const HomePage: NextPage = () => {
   const [whiteNum, setWhiteNum] = useState(2)
   const [blackNum, setBlackNum] = useState(2)
 
+  // 初期ボードを作る（白1、黒-1）
   const createNewBoard = (): number[][] => {
     const board = Array.from(new Array(8), () => new Array(8).fill(9))
     board[3][3] = 1
@@ -107,7 +108,7 @@ const HomePage: NextPage = () => {
         y: number
       }[] = []
       let tmplist = []
-      let yes = false
+      let isPut = false
       const wb = whiteTurn ? 1 : -1
       let ry, rx
       for (let dy = -1; dy <= 1; dy++) {
@@ -128,21 +129,18 @@ const HomePage: NextPage = () => {
             //自分の石に出会った時
             if (newBoard[ry][rx] == wb) {
               list = [...list, ...tmplist]
-              yes = true
+              isPut = true
               break
-              // return [true, tmplist]
             }
           }
           tmplist = []
         }
       }
-      return [yes, list]
+      return [isPut, list]
     }
     const newBoard: number[][] = JSON.parse(JSON.stringify(board))
     if (newBoard[y][x] === 9) {
-      // console.log(newBoard)
       const [b, list] = searchCoordinate(x, y)
-      // console.log('list: ', list)
       if (!b) return false
       else {
         list.map((c) => {
